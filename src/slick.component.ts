@@ -61,39 +61,41 @@ export class SlickComponent implements AfterViewInit, OnDestroy {
 
         this.zone.runOutsideAngular(() => {
             jQuery(this.el.nativeElement)[0].innerHTML = '';
-            this.$instance = jQuery(this.el.nativeElement);
-            this.$instance.on('init', (event, slick) => {
-                this.zone.run(() => {
-                    this.init.emit({event, slick});
+            try{
+                this.$instance = jQuery(this.el.nativeElement);
+                this.$instance.on('init', (event, slick) => {
+                    this.zone.run(() => {
+                        this.init.emit({event, slick});
+                    });
                 });
-            });
 
-            this.$instance.slick(this.config);
-            this.initialized = true;
+                this.$instance.slick(this.config);
+                this.initialized = true;
 
-            this.$instance.on('afterChange', (event, slick, currentSlide) => {
-                self.zone.run(() => {
-                    self.afterChange.emit({event, slick, currentSlide});
+                this.$instance.on('afterChange', (event, slick, currentSlide) => {
+                    self.zone.run(() => {
+                        self.afterChange.emit({event, slick, currentSlide});
+                    });
                 });
-            });
 
-            this.$instance.on('beforeChange', (event, slick, currentSlide, nextSlide) => {
-                self.zone.run(() => {
-                    self.beforeChange.emit({event, slick, currentSlide, nextSlide});
+                this.$instance.on('beforeChange', (event, slick, currentSlide, nextSlide) => {
+                    self.zone.run(() => {
+                        self.beforeChange.emit({event, slick, currentSlide, nextSlide});
+                    });
                 });
-            });
 
-            this.$instance.on('breakpoint', (event, slick, breakpoint) => {
-                self.zone.run(() => {
-                    self.breakpoint.emit({event, slick, breakpoint});
+                this.$instance.on('breakpoint', (event, slick, breakpoint) => {
+                    self.zone.run(() => {
+                        self.breakpoint.emit({event, slick, breakpoint});
+                    });
                 });
-            });
 
-            this.$instance.on('destroy', (event, slick) => {
-                self.zone.run(() => {
-                    self.destroy.emit({event, slick});
+                this.$instance.on('destroy', (event, slick) => {
+                    self.zone.run(() => {
+                        self.destroy.emit({event, slick});
+                    });
                 });
-            });
+            }catch (e) {}
         });
     }
 
@@ -104,7 +106,9 @@ export class SlickComponent implements AfterViewInit, OnDestroy {
         this.slides.push(slickItem);
 
         this.zone.run(() => {
-            this.$instance.slick('slickAdd', slickItem.el.nativeElement);
+            try {
+                this.$instance.slick('slickAdd', slickItem.el.nativeElement);
+            }catch (e) {}
         });
     }
 
@@ -112,7 +116,9 @@ export class SlickComponent implements AfterViewInit, OnDestroy {
         const idx = this.slides.indexOf(slickItem);
 
         this.zone.run(() => {
-            this.$instance.slick('slickRemove', idx);
+	          try {
+                this.$instance.slick('slickRemove', idx);
+            }catch (e) {}
         });
 
         this.slides = this.slides.filter(s => s !== slickItem);
@@ -123,41 +129,54 @@ export class SlickComponent implements AfterViewInit, OnDestroy {
      */
     public slickGoTo(index: number) {
         this.zone.run(() => {
-            this.$instance.slick('slickGoTo', index);
+	        try {
+		        this.$instance.slick('slickGoTo', index);
+	        }catch (e) {}
         });
     }
 
     public slickNext() {
         this.zone.run(() => {
-            this.$instance.slick('slickNext');
+	        try {
+		        this.$instance.slick('slickNext');
+	        }catch (e) {}
         });
     }
 
 
     public slickPrev() {
         this.zone.run(() => {
-            this.$instance.slick('slickPrev');
+	        try {
+		        this.$instance.slick('slickPrev');
+	        }catch (e) {}
         });
     }
 
     public slickPause() {
         this.zone.run(() => {
-            this.$instance.slick('slickPause');
+	        try {
+		        this.$instance.slick('slickPause');
+	        }catch (e) {}
         });
     }
 
     public slickPlay() {
         this.zone.run(() => {
-            this.$instance.slick('slickPlay');
+	        try {
+		        this.$instance.slick('slickPlay');
+	        }catch (e) {}
         });
     }
 
     public unslick() {
-        if (this.$instance) {
-            this.zone.run(() => {
-                this.$instance.slick('unslick');
-            });
-        }
+	    try {
+		    if (this.$instance) {
+			    this.zone.run(() => {
+				    this.$instance.slick('unslick');
+			    });
+		    }
+	    }catch (e) {}
+
         this.initialized = false;
     }
 
